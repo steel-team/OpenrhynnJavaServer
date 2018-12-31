@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: netty-all-4.1.24.Final.jar commons-dbcp2-2.2.0.jar commons
+ -logging-1.2.jar commons-pool2-2.5.0.jar json-20180130.jar mysql-conn
+ ector-java-8.0.11.jar
+Main-Class: com.steelteam.openrhynn.Main
+
