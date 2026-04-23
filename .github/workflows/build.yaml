@@ -1,0 +1,50 @@
+name: Build
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "zulu"
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package
+
+      - name: Postprocess
+        run: mv target/openrhynn-1.0-SNAPSHOT.jar ./openrhynn.jar
+
+      - name: Checkout content
+        uses: actions/checkout@v6
+        with:
+          repository: steel-team/OpenrhynnServerContent
+          path: build
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare full release
+        run: |
+          cp target/openrhynn.jar build/openrhynn.jar |
+          cd build
+          zip -r ../artifact.zip .
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: my-artifact
+          path: |
+            artifact.zip
+            openrhynn.jar
+
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            artifact.zip
+            openrhynn.jar
