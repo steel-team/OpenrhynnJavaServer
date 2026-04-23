@@ -33,6 +33,10 @@ jobs:
           cd build
           zip -r ../artifact.zip .
 
+      - name: Set short git commit SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -43,8 +47,8 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v3
-        if: github.ref_type == 'tag'
         with:
+          name: ${{ steps.vars.outputs.sha_short }}
           files: |
             artifact.zip
             openrhynn.jar
