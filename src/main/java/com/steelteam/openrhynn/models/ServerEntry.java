@@ -26,10 +26,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 package com.steelteam.openrhynn.models;
 
+import org.json.JSONPropertyName;
+
 public class ServerEntry {
-    public ServerEntry(String _name, String _ip) {
+    public ServerEntry(String _name, String _ip, Boolean _public) {
         name = _name;
         ip = _ip;
+        publ = _public;
     }
 
     public ServerEntry() {
@@ -38,4 +41,20 @@ public class ServerEntry {
 
     public String name = null;
     public String ip = null;
+    private boolean publ = false;
+
+    @JSONPropertyName("name")
+    public String getName() {
+        return name;
+    }
+
+    @JSONPropertyName("address")
+    public String getAddress() {
+        return ip;
+    }
+
+    @JSONPropertyName("public")
+    public boolean getPublic() {
+        return publ;
+    }
 }

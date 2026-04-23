@@ -68,7 +68,6 @@ public class ORServer {
             workerGroup = new EpollEventLoopGroup();
         }
         try {
-            // Your existing TCP server on one port
             ServerBootstrap tcpBootstrap = new ServerBootstrap();
             tcpBootstrap.group(bossGroup, workerGroup);
             if (!Epoll.isAvailable())
@@ -95,7 +94,6 @@ public class ORServer {
 
             tcpChannelFuture = tcpBootstrap.bind(tcpPort).sync();
 
-            // WebSocket server on a different port
             ServerBootstrap wsBootstrap = new ServerBootstrap();
             wsBootstrap.group(bossGroup, workerGroup);
             if (!Epoll.isAvailable())
@@ -110,6 +108,9 @@ public class ORServer {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new HttpServerCodec());
                             p.addLast(new HttpObjectAggregator(65536));
+
+                            p.addLast(new ORApiHandler());
+
                             p.addLast(new WebSocketServerProtocolHandler("/ws"));
 
                             p.addLast(new ORMessageEncoderWebsocket());

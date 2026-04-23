@@ -49,6 +49,7 @@ public class ServerConfig {
     public static ArrayList<ServerEntry> servers = new ArrayList<>();
 
     /* server version */
+    public static String version = "1.4.5";
     public static int versionHigh = 1;
     public static int versionLow = 4;
     public static int versionLowSub = 5;
@@ -93,7 +94,8 @@ public class ServerConfig {
             JSONArray arr = obj.getJSONArray("servers");
             for (int i = 0; i < arr.length(); i++) {
                 ServerConfig.servers.add(
-                        new ServerEntry(arr.getJSONObject(i).getString("name"), arr.getJSONObject(i).getString("ip")));
+                        new ServerEntry(arr.getJSONObject(i).getString("name"), arr.getJSONObject(i).getString("ip"),
+                                arr.getJSONObject(i).getBoolean("public")));
             }
 
             /* app.json */
@@ -101,7 +103,8 @@ public class ServerConfig {
             obj = new JSONObject(new String(Files.readAllBytes(path)));
             port = obj.getInt("port");
             wsPort = obj.getInt("wsPort");
-            String[] v = obj.getString("version").split("\\.");
+            version = obj.getString("version");
+            String[] v = version.split("\\.");
             versionHigh = Integer.parseInt(v[0]);
             versionLow = Integer.parseInt(v[1]);
             versionLowSub = Integer.parseInt(v[2]);

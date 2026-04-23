@@ -43,6 +43,9 @@ public class ServerConsole {
         String s = "";
         while (!"exit".equals(s)) {
             s = console.readLine();
+            if (s == null) {
+                break;
+            }
             switch (s) {
                 case "gc":
                     System.gc();
