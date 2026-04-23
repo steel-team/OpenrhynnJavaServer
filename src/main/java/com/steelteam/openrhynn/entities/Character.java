@@ -379,7 +379,7 @@ public class Character extends Entity {
                         ",required_skill" +
                         ",required_magic" +
                         ",frequency" +
-                        ",`range`" +
+                        ",\"range\"" +
                         ",usage_type" +
                         ") VALUES ('" + objectId + "'" +
                         ", '" + item.tpl_id + "'" +

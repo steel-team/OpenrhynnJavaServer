@@ -37,7 +37,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class HandleGameHighscoreRequest {
-    public HandleGameHighscoreRequest(ORClient client, ChannelHandlerContext ctx, GameCharacterHighscoreRequest message) {
+    public HandleGameHighscoreRequest(ORClient client, ChannelHandlerContext ctx,
+            GameCharacterHighscoreRequest message) {
         int lowest = message.getLowest();
         int listLength = message.getListLength();
 
@@ -46,7 +47,8 @@ public class HandleGameHighscoreRequest {
             conn = DataSource.getInstance().getConnection();
 
             Statement state = conn.createStatement();
-            ResultSet resultSet = state.executeQuery("SELECT display_name, exp FROM characters ORDER BY exp DESC LIMIT 0, " + listLength);
+            ResultSet resultSet = state
+                    .executeQuery("SELECT display_name, exp FROM characters ORDER BY exp DESC LIMIT " + listLength);
 
             int i = 0;
             while (resultSet.next()) {
@@ -60,6 +62,12 @@ public class HandleGameHighscoreRequest {
             resultSet.close();
             state.close();
 
-        } catch (Exception ex) { } finally { try { conn.close(); } catch (Exception e) {} }
+        } catch (Exception ex) {
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }
