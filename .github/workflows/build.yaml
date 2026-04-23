@@ -30,6 +30,7 @@ jobs:
       - name: Prepare full release
         run: |
           cp openrhynn.jar build/openrhynn.jar
+          cp -r database build
           cd build
           zip -r ../artifact.zip .
 
