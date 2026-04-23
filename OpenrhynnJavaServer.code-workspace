@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	},
+	"extensions": {
+		"recommendations": [
+			"redhat.java",
+			"vscjava.vscode-maven"
+		]
+	}
+}
