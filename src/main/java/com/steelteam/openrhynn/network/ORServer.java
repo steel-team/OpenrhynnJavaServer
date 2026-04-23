@@ -27,7 +27,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 package com.steelteam.openrhynn.network;
 
 import com.steelteam.openrhynn.network.codec.ORMessageDecoder;
+import com.steelteam.openrhynn.network.codec.ORMessageDecoderWebsocket;
 import com.steelteam.openrhynn.network.codec.ORMessageEncoder;
+import com.steelteam.openrhynn.network.codec.ORMessageEncoderWebsocket;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
@@ -37,17 +40,23 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class ORServer {
-    private int port;
-    public ChannelFuture channelFuture = null;
+    private int tcpPort;
+    private int wsPort;
+    public ChannelFuture tcpChannelFuture = null;
+    public ChannelFuture wsChannelFuture = null;
     public EventLoopGroup bossGroup = null;
     public EventLoopGroup workerGroup = null;
 
-    public ORServer(int port) {
-        this.port = port;
+    public ORServer(int tcpPort, int wsPort) {
+        this.tcpPort = tcpPort;
+        this.wsPort = wsPort;
     }
 
     public void run() throws Exception {
@@ -59,14 +68,15 @@ public class ORServer {
             workerGroup = new EpollEventLoopGroup();
         }
         try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup);
+            // Your existing TCP server on one port
+            ServerBootstrap tcpBootstrap = new ServerBootstrap();
+            tcpBootstrap.group(bossGroup, workerGroup);
             if (!Epoll.isAvailable())
-                b.channel(NioServerSocketChannel.class);
+                tcpBootstrap.channel(NioServerSocketChannel.class);
             else
-                b.channel(EpollServerSocketChannel.class);
+                tcpBootstrap.channel(EpollServerSocketChannel.class);
 
-            b.handler(new LoggingHandler(LogLevel.INFO))
+            tcpBootstrap.handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
@@ -74,21 +84,50 @@ public class ORServer {
 
                             p.addLast(new ORMessageEncoder());
                             p.addLast(new ORMessageDecoder());
-
                             p.addLast(new ORClientHandler());
                         }
                     })
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .option(ChannelOption.SO_BACKLOG, 128)
-                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)// UnpooledByteBufAllocator
+                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childOption(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-            // .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            channelFuture = b.bind(port).sync(); // (7)
+            tcpChannelFuture = tcpBootstrap.bind(tcpPort).sync();
+
+            // WebSocket server on a different port
+            ServerBootstrap wsBootstrap = new ServerBootstrap();
+            wsBootstrap.group(bossGroup, workerGroup);
+            if (!Epoll.isAvailable())
+                wsBootstrap.channel(NioServerSocketChannel.class);
+            else
+                wsBootstrap.channel(EpollServerSocketChannel.class);
+
+            wsBootstrap.handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline p = ch.pipeline();
+                            p.addLast(new HttpServerCodec());
+                            p.addLast(new HttpObjectAggregator(65536));
+                            p.addLast(new WebSocketServerProtocolHandler("/ws"));
+
+                            p.addLast(new ORMessageEncoderWebsocket());
+                            p.addLast(new ORMessageDecoderWebsocket());
+                            p.addLast(new ORClientHandler());
+                        }
+                    })
+                    .option(ChannelOption.SO_REUSEADDR, true)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                    .childOption(ChannelOption.TCP_NODELAY, true)
+                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+
+            wsChannelFuture = wsBootstrap.bind(wsPort).sync();
 
         } catch (Exception ex) {
-            channelFuture.channel().closeFuture();
+            tcpChannelFuture.channel().closeFuture();
+            wsChannelFuture.channel().closeFuture();
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }

@@ -57,6 +57,7 @@ public class ServerConfig {
 
     /* */
     public static int port = 23179;
+    public static int wsPort = 8181;
     public static int messageEncodeNumber = 0;
     public static HashMap<String, Language> languages = new HashMap<>();
     public static ArrayList<CharacterClassModel> classes = new ArrayList<>();
@@ -99,6 +100,7 @@ public class ServerConfig {
             path = Paths.get("./configs/app.json");
             obj = new JSONObject(new String(Files.readAllBytes(path)));
             port = obj.getInt("port");
+            wsPort = obj.getInt("wsPort");
             String[] v = obj.getString("version").split("\\.");
             versionHigh = Integer.parseInt(v[0]);
             versionLow = Integer.parseInt(v[1]);

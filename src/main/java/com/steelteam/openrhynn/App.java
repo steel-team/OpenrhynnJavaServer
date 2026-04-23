@@ -47,7 +47,7 @@ public class App {
             /* create script manager */
             ScriptManager.initialize();
             ServerConfig.loadConfig();
-            SharedVariables.serverInstance = new ORServer(ServerConfig.port);
+            SharedVariables.serverInstance = new ORServer(ServerConfig.port, ServerConfig.wsPort);
             SharedVariables.serverInstance.run();
             PostInitializator.initializeServer();
 

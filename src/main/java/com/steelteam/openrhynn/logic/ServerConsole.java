@@ -52,75 +52,75 @@ public class ServerConsole {
                     break;
             }
         }
-        SharedVariables.serverInstance.channelFuture.channel().closeFuture();
+        SharedVariables.serverInstance.tcpChannelFuture.channel().closeFuture();
+        SharedVariables.serverInstance.wsChannelFuture.channel().closeFuture();
         SharedVariables.serverInstance.workerGroup.shutdownGracefully();
         SharedVariables.serverInstance.bossGroup.shutdownGracefully();
 
         /* system.exit, or wait future? */
     }
 
-
     private static void massRegTest() {
-        for(int i = 0; i < 1001; i++) {
-            //register user with name test + i, and character with name test + i
+        for (int i = 0; i < 1001; i++) {
+            // register user with name test + i, and character with name test + i
             Connection conn = null;
             try {
                 conn = DataSource.getInstance().getConnection();
 
-
-                //create user
-                PreparedStatement st = conn.prepareStatement("INSERT INTO users (login, pass) VALUES (?, '" + Encryption.sha256("ptwg") + "')", PreparedStatement.RETURN_GENERATED_KEYS);
+                // create user
+                PreparedStatement st = conn.prepareStatement(
+                        "INSERT INTO users (login, pass) VALUES (?, '" + Encryption.sha256("ptwg") + "')",
+                        PreparedStatement.RETURN_GENERATED_KEYS);
                 st.setString(1, "test" + i);
                 st.executeUpdate();
                 ResultSet rs2 = st.getGeneratedKeys();
                 int userId = 0;
-                if (rs2.next()){
+                if (rs2.next()) {
                     userId = rs2.getInt(1);
                 }
                 rs2.close();
                 conn.commit();
                 st.close();
 
-                //create character
-
+                // create character
 
                 CharacterClassModel classModel = ServerConfig.classes.get(0);
-                PreparedStatement st2 = conn.prepareStatement("INSERT INTO characters (user_id, class_id, graphics_id, display_name, graphics_x, graphics_y, graphics_dim, health_base, health_effect_extra, health_current, mana_base, mana_effect_extra, mana_current, attack_base, attack_effect_extra, defense_base, defense_effect_extra, damage_base, damage_effect_extra, skill_base, skill_effect_extra, magic_base, magic_effect_extra, healthregenerate_base, healthregenerate_effect_extra, manaregenerate_base, manaregenerate_effect_extra) VALUES (" +
-                        "'" + userId + "'," +
-                        "'" + classModel.classId + "'," +
-                        "'" + classModel.graphicsId + "'," +
-                        "?," +
-                        "'" + classModel.graphicsX + "'," +
-                        "'" + classModel.graphicsY + "'," +
-                        "'" + classModel.graphicsDim + "'," +
-                        "'" + classModel.healthBase + "'," +
-                        "'" + classModel.healthModifier + "'," +
-                        "'" + classModel.healthBase + "'," +
-                        "'" + classModel.manaBase + "'," +
-                        "'" + classModel.manaModifier + "'," +
-                        "'" + classModel.manaBase + "'," +
-                        "'" + classModel.attackBase + "'," +
-                        "'" + classModel.attackModifier + "'," +
-                        "'" + classModel.defenseBase + "'," +
-                        "'" + classModel.defenseModifier + "'," +
-                        "'" + classModel.damageBase + "'," +
-                        "'" + classModel.damageModifier + "'," +
-                        "'" + classModel.skillBase + "'," +
-                        "'" + classModel.skillModifier + "'," +
-                        "'" + classModel.magicBase + "'," +
-                        "'" + classModel.magicModifier + "'," +
-                        "'" + classModel.healthregenerateBase + "'," +
-                        "'" + classModel.healthregenerateModifier + "'," +
-                        "'" + classModel.manaregenerateBase + "'," +
-                        "'" + classModel.manaregenerateModifier + "'" +
-                        ")", PreparedStatement.RETURN_GENERATED_KEYS);
+                PreparedStatement st2 = conn.prepareStatement(
+                        "INSERT INTO characters (user_id, class_id, graphics_id, display_name, graphics_x, graphics_y, graphics_dim, health_base, health_effect_extra, health_current, mana_base, mana_effect_extra, mana_current, attack_base, attack_effect_extra, defense_base, defense_effect_extra, damage_base, damage_effect_extra, skill_base, skill_effect_extra, magic_base, magic_effect_extra, healthregenerate_base, healthregenerate_effect_extra, manaregenerate_base, manaregenerate_effect_extra) VALUES ("
+                                +
+                                "'" + userId + "'," +
+                                "'" + classModel.classId + "'," +
+                                "'" + classModel.graphicsId + "'," +
+                                "?," +
+                                "'" + classModel.graphicsX + "'," +
+                                "'" + classModel.graphicsY + "'," +
+                                "'" + classModel.graphicsDim + "'," +
+                                "'" + classModel.healthBase + "'," +
+                                "'" + classModel.healthModifier + "'," +
+                                "'" + classModel.healthBase + "'," +
+                                "'" + classModel.manaBase + "'," +
+                                "'" + classModel.manaModifier + "'," +
+                                "'" + classModel.manaBase + "'," +
+                                "'" + classModel.attackBase + "'," +
+                                "'" + classModel.attackModifier + "'," +
+                                "'" + classModel.defenseBase + "'," +
+                                "'" + classModel.defenseModifier + "'," +
+                                "'" + classModel.damageBase + "'," +
+                                "'" + classModel.damageModifier + "'," +
+                                "'" + classModel.skillBase + "'," +
+                                "'" + classModel.skillModifier + "'," +
+                                "'" + classModel.magicBase + "'," +
+                                "'" + classModel.magicModifier + "'," +
+                                "'" + classModel.healthregenerateBase + "'," +
+                                "'" + classModel.healthregenerateModifier + "'," +
+                                "'" + classModel.manaregenerateBase + "'," +
+                                "'" + classModel.manaregenerateModifier + "'" +
+                                ")",
+                        PreparedStatement.RETURN_GENERATED_KEYS);
                 st2.setString(1, "test" + i);
                 st2.executeUpdate();
                 conn.commit();
                 st2.close();
-
-
-
 
             } catch (Exception ex) {
                 ex.printStackTrace();
