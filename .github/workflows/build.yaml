@@ -29,14 +29,14 @@ jobs:
 
       - name: Prepare full release
         run: |
-          cp target/openrhynn.jar build/openrhynn.jar |
+          cp openrhynn.jar build/openrhynn.jar
           cd build
           zip -r ../artifact.zip .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: my-artifact
+          name: build
           path: |
             artifact.zip
             openrhynn.jar
