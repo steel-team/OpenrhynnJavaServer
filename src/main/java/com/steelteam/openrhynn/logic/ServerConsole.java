@@ -42,6 +42,16 @@ public class ServerConsole {
         Console console = System.console();
         String s = "";
         while (!"exit".equals(s)) {
+            if (console == null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+                continue;
+            }
+
             s = console.readLine();
             if (s == null) {
                 break;
