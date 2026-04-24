@@ -61,7 +61,7 @@ public class ORServer {
     }
 
     public void run() throws Exception {
-        if (!Epoll.isAvailable()) {
+        if (!Epoll.isAvailable() || ServerConfig.forceNio) {
             bossGroup = new NioEventLoopGroup();
             workerGroup = new NioEventLoopGroup();
         } else {
@@ -97,7 +97,7 @@ public class ORServer {
 
             ServerBootstrap wsBootstrap = new ServerBootstrap();
             wsBootstrap.group(bossGroup, workerGroup);
-            if (!Epoll.isAvailable())
+            if (!Epoll.isAvailable() || ServerConfig.forceNio)
                 wsBootstrap.channel(NioServerSocketChannel.class);
             else
                 wsBootstrap.channel(EpollServerSocketChannel.class);
