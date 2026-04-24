@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: openrhynn_user
+      POSTGRES_PASSWORD: openrhynn_pass
+      POSTGRES_DB: openrhynn
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openrhynn_user -d openrhynn"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  java-app:
+    image: openjdk:27-ea-slim-trixie
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: openrhynn
+      DB_USER: openrhynn_user
+      DB_PASSWORD: openrhynn_pass
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        # install packages
+        apt-get update && apt-get install -y curl unzip postgresql-client && rm -rf /var/lib/apt/lists/*
+        
+        # run from artifact
+        echo "Downloading latest release from GitHub..."
+        curl -L https://github.com/steel-team/OpenrhynnJavaServer/releases/latest/download/artifact.zip -o /tmp/artifact.zip
+        
+        echo "Unzipping artifact..."
+        unzip -o /tmp/artifact.zip -d /app
+        
+        # use custom configs
+        cat > /app/configs/database.json << 'EOF'
+        {
+            "database": {
+                "driver": "org.postgresql.Driver",
+                "str": "jdbc:postgresql://postgres:5432/openrhynn",
+                "login": "openrhynn_user",
+                "password": "openrhynn_pass",
+                "min_conns": "5",
+                "max_conns": "20",
+                "prepared_statements_max": "180"
+            }
+        }
+        EOF
+
+        cat > /app/configs/app.json << 'EOF'
+        {
+          "port": "23179",
+          "wsPort": "8181",
+          "version": "1.4.5",
+          "revision": "4",
+          "gc_time": "60000",
+          "force_nio": true
+        }
+        EOF
+
+        # database restore
+        echo "Waiting for PostgreSQL to be ready..."
+        until PGPASSWORD=openrhynn_pass psql -h postgres -U openrhynn_user -d openrhynn -c '\q' 2>/dev/null; do
+          echo "PostgreSQL is unavailable - sleeping"
+          sleep 2
+        done
+        
+        echo "Ensuring database exists..."
+        PGPASSWORD=openrhynn_pass psql -h postgres -U openrhynn_user -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'openrhynn'" | grep -q 1 || PGPASSWORD=openrhynn_pass psql -h postgres -U openrhynn_user -d postgres -c "CREATE DATABASE openrhynn"
+        
+        echo "Restoring SQL dump..."
+        if [ -f /app/database/postgresql.sql ]; then
+          PGPASSWORD=openrhynn_pass psql -h postgres -U openrhynn_user -d openrhynn -f /app/database/postgresql.sql 2>/dev/null || true
+        else
+          echo "Warning: /app/database/postgresql.sql not found"
+        fi
+        
+        echo "Starting Java application..."
+        cd /app
+        chmod +x run.sh
+        ./run.sh
+
+    volumes:
+      - java_data:/app
+    ports:
+      - 8181:8181
+      - 23179:23179
+
+volumes:
+  postgres_data:
+  java_data:

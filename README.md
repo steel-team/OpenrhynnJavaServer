@@ -5,7 +5,18 @@ Some parts of code belongs to macrolutions LTD and released under original licen
 
 This server is recreation of original C# version of openrhynn server, some parts of code were directly ported so code quality very ugly and should be rewritten.
 
-Changes and notes:
+## Quick start
+
+You may run server by
+
+```
+docker compose up
+```
+
+Please note, this compose file will download artifacts from github releases, if you'd like local development with docker, you have to modify it and add build step with maven compile.
+Build is not reliable in podman env from my experience, so I decided to go with release download approach.
+
+## Changes and notes:
 
 - server now can handle 100+ players in one map (but you should modify client. change DEFAULT_PACKETPERLOOP from 8 to high value like 5000)
 - server is stable (no crashes)
@@ -28,11 +39,12 @@ TO-DO:
 - add trading system
 - fix friends bugs (rewrite network logic?)
 
-Compile:
+## Compile:
 
 ```
 mvn package
 ```
 
-Development:
+## Development:
+
 `VSCodium` is recommended for development
