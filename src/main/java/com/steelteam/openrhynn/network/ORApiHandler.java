@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 import com.steelteam.openrhynn.data.ServerConfig;
+import com.steelteam.openrhynn.logic.World;
 import com.steelteam.openrhynn.models.CharApiEntry;
 
 import io.netty.buffer.Unpooled;
@@ -86,8 +87,10 @@ public class ORApiHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
             for (com.steelteam.openrhynn.entities.Character chr : com.steelteam.openrhynn.entities.Character.characters
                     .values()) {
+                World world = World.registeredWorlds.get(chr.connectedModel.worldId);
                 chars.add(
                         new CharApiEntry(chr.name, chr.level, chr.connectedClient.userType, chr.connectedModel.worldId,
+                                world.name,
                                 chr.getHealthMax(), chr.healthCurrent, chr.getManaMax(), chr.manaCurrent));
             }
 

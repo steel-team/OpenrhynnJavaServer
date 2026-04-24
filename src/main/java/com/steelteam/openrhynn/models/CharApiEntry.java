@@ -32,12 +32,14 @@ import org.json.JSONPropertyName;
 import com.steelteam.openrhynn.enums.UserType;
 
 public class CharApiEntry {
-    public CharApiEntry(String _name, int _level, UserType _userType, int _worldId, int _healthMax, int _healthCurrent,
+    public CharApiEntry(String _name, int _level, UserType _userType, int _worldId, String _worldName, int _healthMax,
+            int _healthCurrent,
             int _manaMax, int _manaCurrent) {
         name = _name;
         level = _level;
         userType = _userType;
         worldId = _worldId;
+        worldName = _worldName;
         healthMax = _healthMax;
         healthCurrent = _healthCurrent;
         manaMax = _manaMax;
@@ -52,6 +54,7 @@ public class CharApiEntry {
     public int level = 0;
     public UserType userType = UserType.UNKNOWN;
     public int worldId = 0;
+    public String worldName = "";
     public int healthMax = 0;
     public int healthCurrent = 0;
     public int manaMax = 0;
@@ -75,6 +78,11 @@ public class CharApiEntry {
     @JSONPropertyName("playfieldId")
     public int getWorldId() {
         return worldId;
+    }
+
+    @JSONPropertyName("playfieldName")
+    public String getWorldName() {
+        return worldName;
     }
 
     @JSONPropertyName("healthMax")
