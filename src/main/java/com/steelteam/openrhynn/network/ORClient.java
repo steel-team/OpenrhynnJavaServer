@@ -44,6 +44,7 @@ import io.netty.util.internal.ConcurrentSet;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class ORClient {
 
@@ -199,6 +200,14 @@ public class ORClient {
     public String getGL(String key) {
         if (languageLink == null)
             languageLink = ServerConfig.languages.get(this.language);
+        if (languageLink == null) {
+            Logger.getGlobal().warning("Language not found: " + this.language);
+            Collection<Language> langs = ServerConfig.languages.values();
+            if (langs.isEmpty())
+                return "";
+
+            languageLink = langs.iterator().next();
+        }
         return languageLink.getEntry(key);
     }
 }
