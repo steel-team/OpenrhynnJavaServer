@@ -26,6 +26,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 package com.steelteam.openrhynn.network;
 
+import com.steelteam.openrhynn.data.ServerConfig;
 import com.steelteam.openrhynn.network.codec.ORMessageDecoder;
 import com.steelteam.openrhynn.network.codec.ORMessageDecoderWebsocket;
 import com.steelteam.openrhynn.network.codec.ORMessageEncoder;
@@ -70,7 +71,7 @@ public class ORServer {
         try {
             ServerBootstrap tcpBootstrap = new ServerBootstrap();
             tcpBootstrap.group(bossGroup, workerGroup);
-            if (!Epoll.isAvailable())
+            if (!Epoll.isAvailable() || ServerConfig.forceNio)
                 tcpBootstrap.channel(NioServerSocketChannel.class);
             else
                 tcpBootstrap.channel(EpollServerSocketChannel.class);

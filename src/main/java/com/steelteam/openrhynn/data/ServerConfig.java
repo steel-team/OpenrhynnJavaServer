@@ -55,6 +55,7 @@ public class ServerConfig {
     public static int versionLowSub = 5;
     public static int revision = 4;
     public static int gcTime = 60000;
+    public static boolean forceNio = false;
 
     /* */
     public static int port = 23179;
@@ -110,6 +111,7 @@ public class ServerConfig {
             versionLowSub = Integer.parseInt(v[2]);
             revision = obj.getInt("revision");
             gcTime = obj.getInt("gc_time");
+            forceNio = obj.getBoolean("force_nio");
 
             /* game.json */
             path = Paths.get("./configs/game.json");
