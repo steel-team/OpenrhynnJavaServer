@@ -5,6 +5,14 @@ Some parts of code belongs to macrolutions LTD and released under original licen
 
 This server is recreation of original C# version of openrhynn server, some parts of code were directly ported so code quality very ugly and should be rewritten.
 
+## Neighbour repositories
+
+[Openrhynn Website](https://github.com/steel-team/OpenrhynnWebsite) - a brand new `OpenRhynn` website, rewritten from scratch, made with `Nuxt` and `Nuxt UI`
+
+[Openrhynn Server-side content](https://github.com/steel-team/OpenrhynnServerContent) - assets required to properly run server
+
+[Openrhynn Runner](https://github.com/steel-team/OpenRhynnRunner) - fork of zb3/freej2me-web which able to run `OpenRhynn` in browser with `WebSocket` transport
+
 ## Quick start
 
 You may run server by
