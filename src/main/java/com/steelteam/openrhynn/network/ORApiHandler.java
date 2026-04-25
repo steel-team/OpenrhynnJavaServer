@@ -89,7 +89,9 @@ public class ORApiHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                     .values()) {
                 World world = World.registeredWorlds.get(chr.connectedModel.worldId);
                 chars.add(
-                        new CharApiEntry(chr.name, chr.level, chr.connectedClient.userType, chr.connectedModel.worldId,
+                        new CharApiEntry(chr.connectedModel.id, chr.connectedModel.clanId, chr.name,
+                                chr.connectedModel.classId, chr.level,
+                                chr.connectedClient.userType, chr.connectedModel.worldId,
                                 world.name,
                                 chr.getHealthMax(), chr.healthCurrent, chr.getManaMax(), chr.manaCurrent));
             }
