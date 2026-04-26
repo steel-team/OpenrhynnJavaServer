@@ -40,6 +40,7 @@ public class ORClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        System.out.println("ORClientHandler channelRead");
         client = new ORClient();
         client.context = ctx;
 
