@@ -49,7 +49,8 @@ public class Friend {
             conn = DataSource.getInstance().getConnection();
 
             Statement state = conn.createStatement();
-            ResultSet resultSet = state.executeQuery("SELECT user_id, display_name FROM characters WHERE id='" + friendId + "'");
+            ResultSet resultSet = state
+                    .executeQuery("SELECT user_id, display_name FROM characters WHERE id='" + friendId + "'");
             if (resultSet.next()) {
                 userFriendId = resultSet.getInt(1);
                 friend = resultSet.getString(2);
@@ -60,14 +61,22 @@ public class Friend {
             state = conn.createStatement();
             resultSet = state.executeQuery("SELECT type FROM users WHERE id='" + userFriendId + "'");
 
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 friend = Character.getDisplayName(friend, UserType.fromInt(resultSet.getInt(1)));
             }
 
             state.close();
             resultSet.close();
 
-        } catch (Exception ex) { ex.printStackTrace(); } finally { try { conn.close(); } catch (Exception e) {} }
+        } catch (Exception ex) {
+            System.out.println("friend load exc");
+            ex.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+            }
+        }
 
         return friend;
     }

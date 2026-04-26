@@ -75,6 +75,7 @@ public class Character extends Entity {
             state.close();
 
         } catch (Exception ex) {
+            System.out.println("chr exc1");
             ex.printStackTrace();
         } finally {
             try {
@@ -137,6 +138,7 @@ public class Character extends Entity {
             state.close();
 
         } catch (Exception ex) {
+            System.out.println("chr exc2");
             ex.printStackTrace();
         } finally {
             try {
@@ -255,6 +257,7 @@ public class Character extends Entity {
                 state.close();
 
             } catch (Exception ex) {
+                System.out.println("chr exc3");
                 ex.printStackTrace();
             } finally {
                 try {

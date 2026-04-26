@@ -37,15 +37,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class HandleGameUserEmailChangeRequest {
-    public HandleGameUserEmailChangeRequest(ORClient client, ChannelHandlerContext ctx, GameUserEmailChangeRequest message) {
+    public HandleGameUserEmailChangeRequest(ORClient client, ChannelHandlerContext ctx,
+            GameUserEmailChangeRequest message) {
         String email = (message.getEmailPart1() + "@" + message.getEmailPart2()).toLowerCase();
 
         ResponseCode responseCode = ResponseCode.ERROR;
         String responseStr = client.getGL("error_unknown");
 
-        if(!"".equals(client.email)) {
+        if (!"".equals(client.email)) {
             responseStr = client.getGL("email_already_set");
-        } else if(!email.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$")) {
+        } else if (!email.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$")) {
             responseStr = client.getGL("email_not_match");
         } else {
             responseCode = ResponseCode.OK;
@@ -54,16 +55,24 @@ public class HandleGameUserEmailChangeRequest {
             try {
                 conn = DataSource.getInstance().getConnection();
 
-
                 client.email = email;
 
-                PreparedStatement st3 = conn.prepareStatement("UPDATE users SET email=? WHERE id='" + client.userId + "'");
+                PreparedStatement st3 = conn
+                        .prepareStatement("UPDATE users SET email=? WHERE id='" + client.userId + "'");
                 st3.setString(1, email);
                 st3.executeUpdate();
                 conn.commit();
                 st3.close();
 
-            } catch (Exception ex) { ex.printStackTrace(); } finally { try { conn.close(); } catch (Exception e) {} }
+            } catch (Exception ex) {
+                System.out.println("email change exc");
+                ex.printStackTrace();
+            } finally {
+                try {
+                    conn.close();
+                } catch (Exception e) {
+                }
+            }
         }
         client.writeMessage(new GameUserEmailChangeResult(responseCode, responseStr).getData());
     }

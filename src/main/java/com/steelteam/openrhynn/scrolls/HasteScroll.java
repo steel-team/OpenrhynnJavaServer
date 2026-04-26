@@ -75,6 +75,7 @@ public class HasteScroll extends BaseScroll {
             }
 
         } catch (Exception ex) {
+            System.out.println("haste exc");
             ex.printStackTrace();
         }
     }

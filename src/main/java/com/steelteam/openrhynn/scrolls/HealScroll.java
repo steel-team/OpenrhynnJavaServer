@@ -40,7 +40,6 @@ public class HealScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-
             amount += Formulas.calculateMagicPower(attacker.getMagicMax(), amount);
 
             target.restoreHP(amount);
@@ -51,6 +50,7 @@ public class HealScroll extends BaseScroll {
             cast();
 
         } catch (Exception ex) {
+            System.out.println("heal scroll exc");
             ex.printStackTrace();
         }
     }

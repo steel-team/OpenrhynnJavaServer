@@ -85,6 +85,7 @@ public class DropCore {
                 dropScroll(world, coordX, coordY);
 
         } catch (Exception ex) {
+            System.out.println("drop core exc");
             ex.printStackTrace();
         }
     }

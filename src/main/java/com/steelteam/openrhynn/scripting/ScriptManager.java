@@ -60,6 +60,7 @@ public class ScriptManager {
             nashorn.eval(script);
             loadedScripts.put(lkey, nashorn);
         } catch (Exception ex) {
+            System.out.println("script exc1");
             ex.printStackTrace();
         }
     }
@@ -78,6 +79,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             invocable.invokeFunction("onTriggerEnter", requester);
         } catch (Exception ex) {
+            System.out.println("script exc2");
             ex.printStackTrace();
         }
     }
@@ -94,6 +96,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             invocable.invokeFunction("onHelpRequest", requester, index);
         } catch (Exception ex) {
+            System.out.println("script exc3");
             ex.printStackTrace();
         }
     }
@@ -112,6 +115,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             invocable.invokeFunction("onTalkRequest", world, requester);
         } catch (Exception ex) {
+            System.out.println("script exc4");
             ex.printStackTrace();
         }
     }
@@ -130,6 +134,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             return (Integer) invocable.invokeFunction("getExecutionTime");
         } catch (Exception ex) {
+            System.out.println("script exc5");
             ex.printStackTrace();
         }
         return 0;
@@ -149,6 +154,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             invocable.invokeFunction("onTalkRequest", world, requester);
         } catch (Exception ex) {
+            System.out.println("script exc6");
             ex.printStackTrace();
         }
     }
@@ -167,6 +173,7 @@ public class ScriptManager {
             Invocable invocable = (Invocable) engine;
             return (Integer) invocable.invokeFunction("getExecutionTime");
         } catch (Exception ex) {
+            System.out.println("script exc7");
             ex.printStackTrace();
         }
         return 0;

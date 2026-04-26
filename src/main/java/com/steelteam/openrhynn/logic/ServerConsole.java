@@ -136,6 +136,7 @@ public class ServerConsole {
                 st2.close();
 
             } catch (Exception ex) {
+                System.out.println("console exception");
                 ex.printStackTrace();
             } finally {
                 try {

@@ -44,7 +44,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class HandleGameUserCharacterCreateRequest {
-    public HandleGameUserCharacterCreateRequest(ORClient client, ChannelHandlerContext ctx, GameUserCharacterCreateRequest message) {
+    public HandleGameUserCharacterCreateRequest(ORClient client, ChannelHandlerContext ctx,
+            GameUserCharacterCreateRequest message) {
         int classId = message.getClassId();
         String name = message.getDisplayName().toLowerCase();
 
@@ -56,72 +57,74 @@ public class HandleGameUserCharacterCreateRequest {
 
         boolean classFound = false;
         CharacterClassModel classModel = null;
-        for(CharacterClassModel cl : ServerConfig.classes) {
-            if(cl.classId == classId) {
+        for (CharacterClassModel cl : ServerConfig.classes) {
+            if (cl.classId == classId) {
                 classModel = cl;
                 classFound = true;
                 break;
             }
         }
 
-        if(!name.matches("^(?=[A-Za-z0-9])(?!.*._()-{2})[A-Za-z0-9._()\\\\-]{3,15}$")) {
+        if (!name.matches("^(?=[A-Za-z0-9])(?!.*._()-{2})[A-Za-z0-9._()\\\\-]{3,15}$")) {
             responseStr = client.getGL("error_char_name");
-        } else if(!classFound) {
+        } else if (!classFound) {
             responseStr = client.getGL("error_class_not_found");
         } else {
             try {
                 conn = DataSource.getInstance().getConnection();
 
                 Statement state = conn.createStatement();
-                ResultSet resultSet = state.executeQuery("SELECT COUNT(id) FROM characters WHERE user_id='" + client.userId + "' AND state=0");
+                ResultSet resultSet = state.executeQuery(
+                        "SELECT COUNT(id) FROM characters WHERE user_id='" + client.userId + "' AND state=0");
                 if (resultSet.next()) {
-                    //seems that credentials is right
-                    //check if user is already online and kick if so
+                    // seems that credentials is right
+                    // check if user is already online and kick if so
                     int count = resultSet.getInt(1);
                     if (count > ServerConfig.maxCharacters - 1) {
                         responseStr = client.getGL("too_many_characters");
                     } else {
 
-
-
                         PreparedStatement st = conn.prepareStatement("SELECT id FROM characters WHERE display_name=?");
                         st.setString(1, name);
                         ResultSet rs = st.executeQuery();
-                        if(!rs.next()) {
+                        if (!rs.next()) {
 
-                            PreparedStatement st2 = conn.prepareStatement("INSERT INTO characters (user_id, class_id, graphics_id, display_name, graphics_x, graphics_y, graphics_dim, health_base, health_effect_extra, health_current, mana_base, mana_effect_extra, mana_current, attack_base, attack_effect_extra, defense_base, defense_effect_extra, damage_base, damage_effect_extra, skill_base, skill_effect_extra, magic_base, magic_effect_extra, healthregenerate_base, healthregenerate_effect_extra, manaregenerate_base, manaregenerate_effect_extra) VALUES (" +
-                                    "'" + client.userId + "'," +
-                                    "'" + classModel.classId + "'," +
-                                    "'" + classModel.graphicsId + "'," +
-                                    "?," +
-                                    "'" + classModel.graphicsX + "'," +
-                                    "'" + classModel.graphicsY + "'," +
-                                    "'" + classModel.graphicsDim + "'," +
-                                    "'" + classModel.healthBase + "'," +
-                                    "'" + classModel.healthModifier + "'," +
-                                    "'" + classModel.healthBase + "'," +
-                                    "'" + classModel.manaBase + "'," +
-                                    "'" + classModel.manaModifier + "'," +
-                                    "'" + classModel.manaBase + "'," +
-                                    "'" + classModel.attackBase + "'," +
-                                    "'" + classModel.attackModifier + "'," +
-                                    "'" + classModel.defenseBase + "'," +
-                                    "'" + classModel.defenseModifier + "'," +
-                                    "'" + classModel.damageBase + "'," +
-                                    "'" + classModel.damageModifier + "'," +
-                                    "'" + classModel.skillBase + "'," +
-                                    "'" + classModel.skillModifier + "'," +
-                                    "'" + classModel.magicBase + "'," +
-                                    "'" + classModel.magicModifier + "'," +
-                                    "'" + classModel.healthregenerateBase + "'," +
-                                    "'" + classModel.healthregenerateModifier + "'," +
-                                    "'" + classModel.manaregenerateBase + "'," +
-                                    "'" + classModel.manaregenerateModifier + "'" +
-                                    ")", PreparedStatement.RETURN_GENERATED_KEYS);
+                            PreparedStatement st2 = conn.prepareStatement(
+                                    "INSERT INTO characters (user_id, class_id, graphics_id, display_name, graphics_x, graphics_y, graphics_dim, health_base, health_effect_extra, health_current, mana_base, mana_effect_extra, mana_current, attack_base, attack_effect_extra, defense_base, defense_effect_extra, damage_base, damage_effect_extra, skill_base, skill_effect_extra, magic_base, magic_effect_extra, healthregenerate_base, healthregenerate_effect_extra, manaregenerate_base, manaregenerate_effect_extra) VALUES ("
+                                            +
+                                            "'" + client.userId + "'," +
+                                            "'" + classModel.classId + "'," +
+                                            "'" + classModel.graphicsId + "'," +
+                                            "?," +
+                                            "'" + classModel.graphicsX + "'," +
+                                            "'" + classModel.graphicsY + "'," +
+                                            "'" + classModel.graphicsDim + "'," +
+                                            "'" + classModel.healthBase + "'," +
+                                            "'" + classModel.healthModifier + "'," +
+                                            "'" + classModel.healthBase + "'," +
+                                            "'" + classModel.manaBase + "'," +
+                                            "'" + classModel.manaModifier + "'," +
+                                            "'" + classModel.manaBase + "'," +
+                                            "'" + classModel.attackBase + "'," +
+                                            "'" + classModel.attackModifier + "'," +
+                                            "'" + classModel.defenseBase + "'," +
+                                            "'" + classModel.defenseModifier + "'," +
+                                            "'" + classModel.damageBase + "'," +
+                                            "'" + classModel.damageModifier + "'," +
+                                            "'" + classModel.skillBase + "'," +
+                                            "'" + classModel.skillModifier + "'," +
+                                            "'" + classModel.magicBase + "'," +
+                                            "'" + classModel.magicModifier + "'," +
+                                            "'" + classModel.healthregenerateBase + "'," +
+                                            "'" + classModel.healthregenerateModifier + "'," +
+                                            "'" + classModel.manaregenerateBase + "'," +
+                                            "'" + classModel.manaregenerateModifier + "'" +
+                                            ")",
+                                    PreparedStatement.RETURN_GENERATED_KEYS);
                             st2.setString(1, name);
                             st2.executeUpdate();
                             ResultSet rs2 = st2.getGeneratedKeys();
-                            if (rs2.next()){
+                            if (rs2.next()) {
                                 charId = rs2.getInt(1);
                             }
                             rs2.close();
@@ -130,7 +133,6 @@ public class HandleGameUserCharacterCreateRequest {
 
                             responseCode = ResponseCode.OK;
                             responseStr = client.getGL("character_created");
-
 
                         } else {
                             responseStr = client.getGL("character_name_inuse");
@@ -144,11 +146,11 @@ public class HandleGameUserCharacterCreateRequest {
                     responseStr = client.getGL("error_unknown");
                 }
 
-
                 resultSet.close();
                 state.close();
 
             } catch (Exception ex) {
+                System.out.println("chr create exc");
                 ex.printStackTrace();
             } finally {
                 try {
@@ -158,16 +160,15 @@ public class HandleGameUserCharacterCreateRequest {
             }
         }
 
-
         client.writeMessage(new GameUserCharacterCreateResult(responseCode, responseStr).getData());
 
-
-        if(responseCode == ResponseCode.OK) {
+        if (responseCode == ResponseCode.OK) {
             try {
                 conn = DataSource.getInstance().getConnection();
 
                 Statement state = conn.createStatement();
-                ResultSet resultSet = state.executeQuery("SELECT * FROM characters WHERE id='" + charId + "' AND state=0");
+                ResultSet resultSet = state
+                        .executeQuery("SELECT * FROM characters WHERE id='" + charId + "' AND state=0");
 
                 if (resultSet.next()) {
                     CharacterModel cm = CharacterMessageFill.fillFromDb(resultSet);
@@ -179,7 +180,13 @@ public class HandleGameUserCharacterCreateRequest {
                 resultSet.close();
                 state.close();
 
-            } catch (Exception ex) { } finally { try { conn.close(); } catch (Exception e) {} }
+            } catch (Exception ex) {
+            } finally {
+                try {
+                    conn.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
 }

@@ -26,6 +26,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 package com.steelteam.openrhynn.network.handlers.server;
 
+import java.util.logging.Logger;
+
 import com.steelteam.openrhynn.logic.CommandProcessor;
 import com.steelteam.openrhynn.logic.World;
 import com.steelteam.openrhynn.network.ORClient;
@@ -33,8 +35,10 @@ import com.steelteam.openrhynn.network.messages.client.GameCharacterChatAllReque
 import io.netty.channel.ChannelHandlerContext;
 
 public class HandleGameCharacterChatAllRequest {
-    public HandleGameCharacterChatAllRequest(ORClient client, ChannelHandlerContext ctx, GameCharacterChatAllRequest message) {
+    public HandleGameCharacterChatAllRequest(ORClient client, ChannelHandlerContext ctx,
+            GameCharacterChatAllRequest message) {
         try {
+            Logger.getGlobal().info("[" + client.currentChar.name + "] " + message.getMsg());
             if (message.getMsg().startsWith("!"))
                 CommandProcessor.handleCommand(client, message.getMsg());
             else {

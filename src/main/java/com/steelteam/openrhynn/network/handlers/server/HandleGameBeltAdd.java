@@ -38,16 +38,16 @@ import java.sql.Statement;
 
 public class HandleGameBeltAdd {
     public HandleGameBeltAdd(ORClient client, ChannelHandlerContext ctx, GameBeltAdd message) {
-        if(client.currentChar.inventory.containsKey(message.getObjectId())) {
+        if (client.currentChar.inventory.containsKey(message.getObjectId())) {
             Item item = client.currentChar.inventory.get(message.getObjectId());
             if (item.units > 0 && item.usage_type == UsageType.USE && message.getSlot() > -1 && message.getSlot() < 4) {
                 Connection conn = null;
                 try {
                     conn = DataSource.getInstance().getConnection();
 
-                    /* set belt slot & remove previous belt slot*/
-                    for(Item it : client.currentChar.inventory.values()) {
-                        if(it.belt == message.getSlot()) {
+                    /* set belt slot & remove previous belt slot */
+                    for (Item it : client.currentChar.inventory.values()) {
+                        if (it.belt == message.getSlot()) {
                             it.belt = -1;
                             /* update */
                             Statement state = conn.createStatement();
@@ -66,8 +66,15 @@ public class HandleGameBeltAdd {
                     conn.commit();
                     state.close();
 
-
-                } catch (Exception ex) { ex.printStackTrace();} finally { try { conn.close(); } catch (Exception e) {} }
+                } catch (Exception ex) {
+                    System.out.println("belt add exc");
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        conn.close();
+                    } catch (Exception e) {
+                    }
+                }
 
             }
         }

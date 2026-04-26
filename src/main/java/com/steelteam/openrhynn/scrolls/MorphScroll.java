@@ -53,16 +53,17 @@ public class MorphScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-            if(!world.scrolls.contains(this)) {
+            if (!world.scrolls.contains(this)) {
 
                 durability = durability * 1000;
                 startTime = currentTime;
 
-                if(!target.morphed) {
+                if (!target.morphed) {
                     target.morphed = true;
                     int _100p = target.getDefenseMax();
                     int _1p = _100p / 100;
-                    defenseDecreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(), defenseDecreasePercent);
+                    defenseDecreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(),
+                            defenseDecreasePercent);
                     defenseBack = _1p * defenseDecreasePercent;
                     target.defenseEffectsTemp -= defenseBack;
 
@@ -77,15 +78,16 @@ public class MorphScroll extends BaseScroll {
                     target.graphicsY = graphicsY;
                     target.graphicsDim = graphicsDim;
 
-                    world.broadcastMessage(new GameMorph(target.objectId, target.graphicsId, target.graphicsDim, target.graphicsX, target.graphicsY).getData(), 0);
+                    world.broadcastMessage(new GameMorph(target.objectId, target.graphicsId, target.graphicsDim,
+                            target.graphicsX, target.graphicsY).getData(), 0);
 
                     this.cast();
 
                     world.scrolls.add(this);
                 }
 
-            } else if(startTime + durability < currentTime) {
-                //unmorph & remove
+            } else if (startTime + durability < currentTime) {
+                // unmorph & remove
 
                 target.morphed = false;
 
@@ -96,12 +98,14 @@ public class MorphScroll extends BaseScroll {
 
                 target.defenseEffectsTemp += defenseBack;
 
-                world.broadcastMessage(new GameMorph(target.objectId, target.graphicsId, target.graphicsDim, target.graphicsX, target.graphicsY).getData(), 0);
+                world.broadcastMessage(new GameMorph(target.objectId, target.graphicsId, target.graphicsDim,
+                        target.graphicsX, target.graphicsY).getData(), 0);
 
                 world.scrolls.remove(this);
             }
 
         } catch (Exception ex) {
+            System.out.println("morph scroll exc");
             ex.printStackTrace();
         }
     }

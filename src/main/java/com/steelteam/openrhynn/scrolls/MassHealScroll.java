@@ -58,7 +58,6 @@ public class MassHealScroll extends BaseScroll {
 
                 world.scrolls.add(this);
 
-
             } else if (startTime + sleepTime < currentTime) {
 
                 world.scrolls.remove(this);
@@ -71,7 +70,7 @@ public class MassHealScroll extends BaseScroll {
                 int centerX = centerCellX * Cell.cellSize;
                 int centerY = centerCellY * Cell.cellSize;
 
-                int cof = 2 * Cell.cellSize;//3 cells range ---*---
+                int cof = 2 * Cell.cellSize;// 3 cells range ---*---
 
                 x1 = centerX - cof + Cell.cellSize;
                 x2 = centerX + cof;
@@ -82,13 +81,13 @@ public class MassHealScroll extends BaseScroll {
                 ArrayList<Entity> entities = world.getMobs();
                 entities.addAll(world.getCharacters());
 
-                for(Entity ent : entities) {
-                    if(ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
+                for (Entity ent : entities) {
+                    if (ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
                         ent.restoreHP(cleanHeal);
                         /* visual */
                         BaseScroll scroll = new BaseScroll();
                         scroll.world = world;
-                        scroll.flashTarget = 0;//flash
+                        scroll.flashTarget = 0;// flash
                         scroll.useAttackerIcon = 0;
                         scroll.useSpellVisuals = 1;
                         scroll.spellVisualTime = 2;
@@ -101,10 +100,10 @@ public class MassHealScroll extends BaseScroll {
                     }
                 }
 
-
             }
 
         } catch (Exception ex) {
+            System.out.println("mass heal scroll exc");
             ex.printStackTrace();
         }
     }

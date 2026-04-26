@@ -48,7 +48,7 @@ public class RageScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-            if(!world.scrolls.contains(this)) {
+            if (!world.scrolls.contains(this)) {
                 durability = durability * 1000;
 
                 startTime = currentTime;
@@ -60,18 +60,19 @@ public class RageScroll extends BaseScroll {
 
                 world.scrolls.add(this);
             } else {
-                if(startTime + durability < currentTime) {
+                if (startTime + durability < currentTime) {
                     world.scrolls.remove(this);
                 } else {
-                    if(lastDamageTime + damageTimePerTick < currentTime) {
+                    if (lastDamageTime + damageTimePerTick < currentTime) {
                         lastDamageTime = currentTime;
-                        if(world.clearDamage(attacker, target, damage, true))
+                        if (world.clearDamage(attacker, target, damage, true))
                             world.scrolls.remove(this);
                     }
                 }
             }
 
         } catch (Exception ex) {
+            System.out.println("rage scroll exc");
             ex.printStackTrace();
         }
     }

@@ -125,6 +125,7 @@ public class HandleGameUserCharacterSelectRequest {
                 client.currentChar.sendSilentUpdate();
 
             } catch (Exception ex) {
+                System.out.println("chr select exc");
                 ex.printStackTrace();
             } finally {
                 try {

@@ -67,6 +67,7 @@ public class DataSource {
             ds.setTestWhileIdle(true);
             // ds.
         } catch (Exception e) {
+            System.out.println("data source exc");
             e.printStackTrace();
         }
     }

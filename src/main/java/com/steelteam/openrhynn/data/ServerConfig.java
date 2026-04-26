@@ -489,6 +489,7 @@ public class ServerConfig {
             }
 
         } catch (Exception ex) {
+            System.out.println("api exception");
             ex.printStackTrace();
         }
     }

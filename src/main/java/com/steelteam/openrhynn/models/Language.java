@@ -43,20 +43,23 @@ public class Language {
 
     public void prepareStrings(String lang) {
         this.language = lang;
-        //load from json, path localization/<lang>.json
+        // load from json, path localization/<lang>.json
         try {
-            Path path = Paths.get("./localization/" + this.language +".json");
+            Path path = Paths.get("./localization/" + this.language + ".json");
             JSONObject obj = new JSONObject(new String(Files.readAllBytes(path), Charset.forName("UTF-8")));
             JSONObject langj = obj.getJSONObject("language");
             JSONArray arr = langj.getJSONArray("data");
             langCode = langj.getString("code");
-            for(int i = 0; i < arr.length(); i++) {
-                //replace required symbols
+            for (int i = 0; i < arr.length(); i++) {
+                // replace required symbols
                 String val = arr.getJSONObject(i).getString("value");
                 String id = arr.getJSONObject(i).getString("id");
                 strings.put(id, val);
             }
-        } catch (Exception ex) {ex.printStackTrace();}
+        } catch (Exception ex) {
+            System.out.println("locale prep exc");
+            ex.printStackTrace();
+        }
         ServerConfig.languages.put(this.language, this);
     }
 

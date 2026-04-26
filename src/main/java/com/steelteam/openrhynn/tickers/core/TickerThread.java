@@ -46,8 +46,14 @@ public class TickerThread extends Thread {
         while (!disrupt) {
             try {
                 try {
+                    if (tickerLink == null) {
+                        Thread.sleep(delayMS);
+                        continue;
+                    }
+
                     tickerLink.tick(0);
                 } catch (Exception ex) {
+                    System.out.println("ticker thread exc");
                     ex.printStackTrace();
                 }
                 Thread.sleep(delayMS);

@@ -38,7 +38,7 @@ import java.sql.Statement;
 
 public class HandleGameBeltRemove {
     public HandleGameBeltRemove(ORClient client, ChannelHandlerContext ctx, GameBeltRemove message) {
-        if(client.currentChar.inventory.containsKey(message.getObjectId())) {
+        if (client.currentChar.inventory.containsKey(message.getObjectId())) {
             Item item = client.currentChar.inventory.get(message.getObjectId());
             if (item.units > 0 && item.usage_type == UsageType.USE) {
                 item.belt = -1;
@@ -53,7 +53,15 @@ public class HandleGameBeltRemove {
                     conn.commit();
                     state.close();
 
-                } catch (Exception ex) { ex.printStackTrace();} finally { try { conn.close(); } catch (Exception e) {} }
+                } catch (Exception ex) {
+                    System.out.println("belt rmv exc");
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        conn.close();
+                    } catch (Exception e) {
+                    }
+                }
             }
         }
     }

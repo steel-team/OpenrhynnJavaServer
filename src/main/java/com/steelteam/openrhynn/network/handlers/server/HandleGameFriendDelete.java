@@ -40,20 +40,22 @@ import java.sql.Statement;
 public class HandleGameFriendDelete {
     public HandleGameFriendDelete(ORClient client, ChannelHandlerContext ctx, GameFriendDelete message) {
         int friendId = message.getObjectId();
-        if(client.currentChar.friends.containsKey(friendId)) {
+        if (client.currentChar.friends.containsKey(friendId)) {
             Friend fr = client.currentChar.friends.get(friendId);
-            if(fr.isConfirmed) {
-                //notify other friend about delition
-                if(Character.characters.containsKey(friendId)) {
-                    Character.characters.get(friendId).connectedClient.writeMessage(new GameInfo(Character.characters.get(friendId).connectedClient.getGL("friend_deleted").replace("{0}", client.currentChar.name)).getData());
-                    //to-do create remove message client/server side
+            if (fr.isConfirmed) {
+                // notify other friend about delition
+                if (Character.characters.containsKey(friendId)) {
+                    Character.characters.get(friendId).connectedClient
+                            .writeMessage(new GameInfo(Character.characters.get(friendId).connectedClient
+                                    .getGL("friend_deleted").replace("{0}", client.currentChar.name)).getData());
+                    // to-do create remove message client/server side
                 }
             }
 
             /* remove from DB */
             int lower = message.getObjectId();
             int higher = client.currentChar.objectId;
-            if(lower > higher) {
+            if (lower > higher) {
                 lower = higher;
                 higher = message.getObjectId();
             }
@@ -62,14 +64,23 @@ public class HandleGameFriendDelete {
             try {
                 conn = DataSource.getInstance().getConnection();
                 Statement state = conn.createStatement();
-                state.executeUpdate("DELETE FROM friends WHERE lower_id='" + lower + "' AND higher_id='" + higher + "';");
+                state.executeUpdate(
+                        "DELETE FROM friends WHERE lower_id='" + lower + "' AND higher_id='" + higher + "';");
                 conn.commit();
                 state.close();
 
-            } catch (Exception ex) { ex.printStackTrace();} finally { try { conn.close(); } catch (Exception e) {} }
+            } catch (Exception ex) {
+                System.out.println("friend del exc");
+                ex.printStackTrace();
+            } finally {
+                try {
+                    conn.close();
+                } catch (Exception e) {
+                }
+            }
 
             client.currentChar.friends.remove(friendId);
-            if(Character.characters.containsKey(friendId))
+            if (Character.characters.containsKey(friendId))
                 Character.characters.get(friendId).friends.remove(client.currentChar.objectId);
 
         }

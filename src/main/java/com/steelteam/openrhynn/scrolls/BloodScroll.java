@@ -40,7 +40,7 @@ public class BloodScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-            if(attackerId == targetId)
+            if (attackerId == targetId)
                 return;
 
             int amountFinal = Formulas.calculateMagicPower(attacker.getMagicMax(), amount);
@@ -56,6 +56,7 @@ public class BloodScroll extends BaseScroll {
             cast();
 
         } catch (Exception ex) {
+            System.out.println("blood scroll exc");
             ex.printStackTrace();
         }
     }

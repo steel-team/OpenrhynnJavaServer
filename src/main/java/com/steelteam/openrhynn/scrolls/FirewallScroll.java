@@ -56,20 +56,18 @@ public class FirewallScroll extends BaseScroll {
         try {
             Entity attacker = world.getEntity(attackerId);
 
-            if(!world.scrolls.contains(this)) {
+            if (!world.scrolls.contains(this)) {
                 startTime = currentTime;
-
 
                 cleanDamage += Formulas.calculateMagicPower(attacker.getMagicMax(), cleanDamage);
 
-                //timing
+                // timing
                 int millitime = time * 1000;
                 damageTimePerTick = 200;
-                //int howmany = millitime / t;
+                // int howmany = millitime / t;
                 durability = millitime;
 
-
-                //add firewall
+                // add firewall
                 Firewall fire = new Firewall();
                 fire.attackerId = attackerId;
                 fire.cellX = cellX;
@@ -81,13 +79,13 @@ public class FirewallScroll extends BaseScroll {
 
                 world.scrolls.add(this);
             } else {
-                if(startTime + durability < currentTime) {
-                    //remove firewall
+                if (startTime + durability < currentTime) {
+                    // remove firewall
                     world.firewalls.remove(cellX + "_" + cellY);
                     world.broadcastMessage(new GameFirewallRemove(cellX, cellY).getData(), 0);
                     world.scrolls.remove(this);
                 } else {
-                    if(lastDamageTime + damageTimePerTick < currentTime) {
+                    if (lastDamageTime + damageTimePerTick < currentTime) {
                         lastDamageTime = currentTime;
 
                         int x1 = 0;
@@ -98,7 +96,7 @@ public class FirewallScroll extends BaseScroll {
                         int centerX = cellX * Cell.cellSize;
                         int centerY = cellY * Cell.cellSize;
 
-                        int cof = Cell.cellSize;//3 cells range ---*---
+                        int cof = Cell.cellSize;// 3 cells range ---*---
 
                         x1 = centerX;
                         x2 = centerX + cof;// + cof;
@@ -106,25 +104,21 @@ public class FirewallScroll extends BaseScroll {
                         y1 = centerY - cof;
                         y2 = centerY;// + cof;
 
-
                         ArrayList<Entity> entities = world.getMobs();
                         entities.addAll(world.getCharacters());
 
-                        for(Entity ent : entities) {
-                            if(ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
+                        for (Entity ent : entities) {
+                            if (ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
                                 world.clearDamage(attacker, ent, cleanDamage, true);
                             }
                         }
-
-
-
-
 
                     }
                 }
             }
 
         } catch (Exception ex) {
+            System.out.println("firewall scroll exc");
             ex.printStackTrace();
         }
     }

@@ -45,16 +45,17 @@ public class CurseScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-            if(!world.scrolls.contains(this)) {
+            if (!world.scrolls.contains(this)) {
 
                 durability = durability * 1000;
                 startTime = currentTime;
 
-                if(!target.cursed) {
+                if (!target.cursed) {
                     target.cursed = true;
                     int _100p = target.getDefenseMax();
                     int _1p = _100p / 100;
-                    defenseDecreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(), defenseDecreasePercent);
+                    defenseDecreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(),
+                            defenseDecreasePercent);
                     defenseBack = _1p * defenseDecreasePercent;
 
                     target.defenseEffectsTemp -= defenseBack;
@@ -64,7 +65,7 @@ public class CurseScroll extends BaseScroll {
                     world.scrolls.add(this);
                 }
 
-            } else if(startTime + durability < currentTime) {
+            } else if (startTime + durability < currentTime) {
                 target.cursed = false;
                 target.defenseEffectsTemp += defenseBack;
 
@@ -72,6 +73,7 @@ public class CurseScroll extends BaseScroll {
             }
 
         } catch (Exception ex) {
+            System.out.println("curse scroll exc");
             ex.printStackTrace();
         }
     }

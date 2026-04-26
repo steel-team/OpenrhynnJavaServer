@@ -58,7 +58,6 @@ public class MassAttackScroll extends BaseScroll {
 
                 world.scrolls.add(this);
 
-
             } else if (startTime + sleepTime < currentTime) {
 
                 world.scrolls.remove(this);
@@ -71,7 +70,7 @@ public class MassAttackScroll extends BaseScroll {
                 int centerX = centerCellX * Cell.cellSize;
                 int centerY = centerCellY * Cell.cellSize;
 
-                int cof = 3 * Cell.cellSize;//3 cells range ---*---
+                int cof = 3 * Cell.cellSize;// 3 cells range ---*---
 
                 x1 = centerX - cof + Cell.cellSize;
                 x2 = centerX + cof;
@@ -82,8 +81,8 @@ public class MassAttackScroll extends BaseScroll {
                 ArrayList<Entity> entities = world.getMobs();
                 entities.addAll(world.getCharacters());
 
-                for(Entity ent : entities) {
-                    if(ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
+                for (Entity ent : entities) {
+                    if (ent.x > x1 && ent.x < x2 && ent.y > y1 && ent.y < y2) {
                         world.clearDamage(attacker, ent, cleanDamage, true);
                     }
                 }
@@ -91,6 +90,7 @@ public class MassAttackScroll extends BaseScroll {
             }
 
         } catch (Exception ex) {
+            System.out.println("mass attack scroll exc");
             ex.printStackTrace();
         }
     }

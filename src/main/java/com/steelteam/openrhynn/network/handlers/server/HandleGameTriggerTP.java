@@ -116,6 +116,7 @@ public class HandleGameTriggerTP {
                     client.writeMessage(new GameUpdateCords(client.currentChar.x, client.currentChar.y,
                             client.currentChar.direction).getData());
                 } catch (Exception ex) {
+                    System.out.println("tp trigger exc");
                     ex.printStackTrace();
                 }
             }

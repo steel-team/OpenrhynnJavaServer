@@ -120,6 +120,7 @@ public class ORApiHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        System.out.println("api exception");
         cause.printStackTrace();
         ctx.close();
     }

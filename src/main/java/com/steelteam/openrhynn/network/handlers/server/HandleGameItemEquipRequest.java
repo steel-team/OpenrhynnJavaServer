@@ -64,6 +64,7 @@ public class HandleGameItemEquipRequest {
                         state.close();
 
                     } catch (Exception ex) {
+                        System.out.println("itm eq exc");
                         ex.printStackTrace();
                     } finally {
                         try {

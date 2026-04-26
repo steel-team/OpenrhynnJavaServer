@@ -100,6 +100,7 @@ public class PostInitializator {
             state.close();
 
         } catch (Exception ex) {
+            System.out.println("post init exc1");
             ex.printStackTrace();
         } finally {
             try {
@@ -140,6 +141,7 @@ public class PostInitializator {
             state.close();
 
         } catch (Exception ex) {
+            System.out.println("post init exc2");
             ex.printStackTrace();
         } finally {
             try {

@@ -68,6 +68,7 @@ public class ORClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        System.out.println("or client handler exc");
         cause.printStackTrace();
         ctx.close();
     }
