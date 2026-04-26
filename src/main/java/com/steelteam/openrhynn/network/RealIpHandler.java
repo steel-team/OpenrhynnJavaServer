@@ -33,14 +33,12 @@ public class RealIpHandler extends ChannelHandlerAdapter {
 
             if (isTrustedProxy(originalClientIp)) {
                 String realClientIp = extractRealClientIp(request);
-                System.out.println("r ip: " + realClientIp);
                 if (realClientIp != null) {
                     ctx.channel().attr(AttributeKey.valueOf("clientIp")).set(realClientIp);
                 } else {
                     ctx.channel().attr(AttributeKey.valueOf("clientIp")).set(originalClientIp);
                 }
             } else {
-                System.out.println("not trusted ip: " + originalClientIp);
                 ctx.channel().attr(AttributeKey.valueOf("clientIp")).set(originalClientIp);
             }
         }
@@ -64,7 +62,6 @@ public class RealIpHandler extends ChannelHandlerAdapter {
         CharSequence forwardedFor = request.headers().get(X_FORWARDED_FOR);
         if (forwardedFor != null && !forwardedFor.isEmpty()) {
             String[] ips = forwardedFor.toString().split(",");
-            System.out.println("1 ip: " + forwardedFor);
             if (ips.length > 0) {
                 return ips[0].trim();
             }
@@ -72,7 +69,6 @@ public class RealIpHandler extends ChannelHandlerAdapter {
 
         CharSequence realIp = request.headers().get(X_REAL_IP);
         if (realIp != null && !realIp.isEmpty()) {
-            System.out.println("2 ip: " + realIp);
             return realIp.toString();
         }
 
