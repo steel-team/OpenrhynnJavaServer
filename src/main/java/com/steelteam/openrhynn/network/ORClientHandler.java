@@ -30,8 +30,6 @@ import com.steelteam.openrhynn.network.handlers.ORMessageProcessor;
 import com.steelteam.openrhynn.network.messages.ORMessage;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 public class ORClientHandler extends ChannelHandlerAdapter {
@@ -47,7 +45,7 @@ public class ORClientHandler extends ChannelHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         Logger.getGlobal().info("Client disconnected "
-                + ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress());
+                + ClientIpUtil.getClientIp(ctx));
         if (client != null)
             client.close(false);
     }
