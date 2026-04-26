@@ -30,6 +30,7 @@ import com.steelteam.openrhynn.network.handlers.ORMessageProcessor;
 import com.steelteam.openrhynn.network.messages.ORMessage;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
@@ -41,6 +42,9 @@ public class ORClientHandler extends ChannelHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) {
         client = new ORClient();
         client.context = ctx;
+
+        Logger.getGlobal().info("Client connected "
+                + ClientIpUtil.getClientIp(ctx));
     }
 
     @Override

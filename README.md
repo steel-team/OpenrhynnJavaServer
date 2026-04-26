@@ -11,6 +11,8 @@ This server is recreation of original C# version of openrhynn server, some parts
 
 [Openrhynn Server-side content](https://github.com/steel-team/OpenrhynnServerContent) - assets required to properly run server
 
+[Openrhynn Client](https://github.com/steel-team/OpenrhynnClient) - fork of marlowe-fw/Rhynn, with removed original server and world builder (only client with OR modifications)
+
 [Openrhynn Runner](https://github.com/steel-team/OpenRhynnRunner) - fork of zb3/freej2me-web which able to run `OpenRhynn` in browser with `WebSocket` transport
 
 ## Quick start
