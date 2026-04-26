@@ -107,10 +107,11 @@ public class ORServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline p = ch.pipeline();
-                            p.addLast(new RealIpHandler());
 
                             p.addLast(new HttpServerCodec());
                             p.addLast(new HttpObjectAggregator(65536));
+
+                            p.addLast(new RealIpHandler());
 
                             p.addLast(new ORApiHandler());
 
