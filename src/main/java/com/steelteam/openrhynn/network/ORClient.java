@@ -121,7 +121,8 @@ public class ORClient {
                 pipe.addMessage(msg);
             }
 
-            context.writeAndFlush(pipe);
+            if (context != null)
+                context.writeAndFlush(pipe);
 
             flushLocked = false;
         }
