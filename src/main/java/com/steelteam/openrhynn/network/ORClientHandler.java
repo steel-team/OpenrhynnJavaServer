@@ -40,12 +40,8 @@ public class ORClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("ORClientHandler channelRead");
         client = new ORClient();
         client.context = ctx;
-
-        Logger.getGlobal().info("Client connected "
-                + ClientIpUtil.getClientIp(ctx));
     }
 
     @Override
@@ -60,6 +56,11 @@ public class ORClientHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (client.stopCommunication)
             return;
+        if (!client.read) {
+            client.read = true;
+            Logger.getGlobal().info("Client connected "
+                    + ClientIpUtil.getClientIp(ctx));
+        }
         client.busy = true;
         ORMessage orMessage = (ORMessage) msg;
         ORMessageProcessor.ProcessMessage(client, ctx, orMessage);

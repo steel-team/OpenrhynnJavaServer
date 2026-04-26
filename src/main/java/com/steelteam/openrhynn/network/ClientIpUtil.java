@@ -10,7 +10,6 @@ public class ClientIpUtil {
 
     public static String getClientIp(ChannelHandlerContext ctx) {
         String clientIp = ctx.channel().attr(CLIENT_IP_KEY).get();
-        System.out.println("rclientIp: " + clientIp);
 
         if (clientIp != null && !clientIp.isEmpty()) {
             return clientIp;

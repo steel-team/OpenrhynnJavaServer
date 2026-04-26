@@ -109,16 +109,16 @@ public class ORServer {
                             ChannelPipeline p = ch.pipeline();
 
                             p.addLast(new HttpServerCodec());
-                            p.addLast(new RealIpHandler());
                             p.addLast(new HttpObjectAggregator(65536));
+                            p.addLast("realIp", new RealIpHandler());
 
-                            p.addLast(new ORApiHandler());
+                            p.addAfter("realIp", "api", new ORApiHandler());
 
-                            p.addLast(new WebSocketServerProtocolHandler("/ws"));
+                            p.addAfter("api", "wsHandler", new WebSocketServerProtocolHandler("/ws"));
 
-                            p.addLast(new ORMessageEncoderWebsocket());
-                            p.addLast(new ORMessageDecoderWebsocket());
-                            p.addLast(new ORClientHandler());
+                            p.addAfter("wsHandler", "wsClientHandler", new ORClientHandler());
+                            p.addAfter("wsHandler", "wsEncoder", new ORMessageEncoderWebsocket());
+                            p.addAfter("wsHandler", "wsDecoder", new ORMessageDecoderWebsocket());
                         }
                     })
                     .option(ChannelOption.SO_REUSEADDR, true)

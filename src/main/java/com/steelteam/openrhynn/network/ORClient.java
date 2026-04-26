@@ -78,6 +78,7 @@ public class ORClient {
     public boolean busy = false;
 
     public boolean stopCommunication = false;
+    public boolean read = false;
 
     /* communications */
     public ArrayList<ORMessage> messageQueue = new ArrayList<>();

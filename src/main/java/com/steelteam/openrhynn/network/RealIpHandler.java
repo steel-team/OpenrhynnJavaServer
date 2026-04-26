@@ -26,7 +26,6 @@ public class RealIpHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("RealIpHandler channelRead");
         if (msg instanceof HttpRequest) {
             HttpRequest request = (HttpRequest) msg;
             InetSocketAddress remoteAddress = (InetSocketAddress) ctx.channel().remoteAddress();
