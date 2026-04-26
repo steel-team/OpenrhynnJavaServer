@@ -43,6 +43,8 @@ public class RealIpHandler extends ChannelHandlerAdapter {
                 System.out.println("non trusted proxy");
                 ctx.channel().attr(AttributeKey.valueOf("clientIp")).set(originalClientIp);
             }
+        } else {
+            System.out.println("non http");
         }
         super.channelRead(ctx, msg);
     }
