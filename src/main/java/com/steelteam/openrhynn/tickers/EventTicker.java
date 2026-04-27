@@ -55,8 +55,11 @@ public class EventTicker extends Ticker {
             }
         }
 
-        for (BaseScroll scroll : world.scrolls) {
-            scroll.tick();
+        synchronized (world.scrolls) {
+            for (int i = world.scrolls.size() - 1; i >= 0; i--) {
+                BaseScroll scroll = world.scrolls.get(i);
+                scroll.tick();
+            }
         }
     }
 }

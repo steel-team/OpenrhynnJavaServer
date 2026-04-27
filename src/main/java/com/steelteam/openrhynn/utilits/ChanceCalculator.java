@@ -29,9 +29,11 @@ package com.steelteam.openrhynn.utilits;
 public class ChanceCalculator {
     private static AdvRandom random = new AdvRandom();
 
-    public static double next(double a,double b)
-    {
-        return (double)random.nextIntImproved((int)a, (int)b);
+    public static double next(double a, double b) {
+        if (b < a)
+            return a;
+
+        return (double) random.nextIntImproved((int) a, (int) b);
     }
 
     public static boolean calculate(int chance) {

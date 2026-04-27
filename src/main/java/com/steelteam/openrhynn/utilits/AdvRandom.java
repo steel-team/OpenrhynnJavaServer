@@ -30,6 +30,9 @@ import java.util.Random;
 
 public class AdvRandom extends Random {
     public int nextIntImproved(int lowerBound, int upperBound) {
-        return nextInt(upperBound-lowerBound) + lowerBound;
+        int bound = upperBound - lowerBound;
+        if (upperBound - lowerBound <= 0)
+            bound = 1;
+        return nextInt(bound) + lowerBound;
     }
 }
