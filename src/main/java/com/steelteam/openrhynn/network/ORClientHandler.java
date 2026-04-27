@@ -44,10 +44,13 @@ public class ORClientHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        Logger.getGlobal().info("Client disconnected "
-                + ClientIpUtil.getClientIp(ctx));
-        if (client != null)
+        if (client != null) {
+            if (client.read) {
+                Logger.getGlobal().info("Client disconnected "
+                        + ClientIpUtil.getClientIp(ctx));
+            }
             client.close(false);
+        }
     }
 
     @Override

@@ -68,6 +68,9 @@ public class ORServer {
             bossGroup = new EpollEventLoopGroup();
             workerGroup = new EpollEventLoopGroup();
         }
+
+        java.util.logging.Logger.getLogger("io.netty").setLevel(java.util.logging.Level.OFF);
+
         try {
             ServerBootstrap tcpBootstrap = new ServerBootstrap();
             tcpBootstrap.group(bossGroup, workerGroup);
