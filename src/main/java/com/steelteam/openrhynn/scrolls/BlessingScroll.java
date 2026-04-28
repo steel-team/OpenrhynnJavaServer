@@ -45,31 +45,37 @@ public class BlessingScroll extends BaseScroll {
             Entity attacker = world.getEntity(attackerId);
             Entity target = world.getEntity(targetId);
 
-            if (!world.scrolls.contains(this)) {
+            if (target != null) {
+                if (!world.scrolls.contains(this)) {
 
-                durability = durability * 1000;
-                startTime = currentTime;
+                    durability = durability * 1000;
+                    startTime = currentTime;
 
-                if (!target.blessed) {
-                    target.blessed = true;
-                    int _100p = target.getAttackMax();
-                    int _1p = _100p / 100;
-                    attackIncreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(),
-                            attackIncreasePercent);
-                    attackBack = _1p * attackIncreasePercent;
+                    if (!target.blessed) {
+                        target.blessed = true;
+                        int _100p = target.getAttackMax();
+                        int _1p = _100p / 100;
 
-                    target.attackEffectsTemp += attackBack;
+                        if (attacker != null) {
+                            attackIncreasePercent += Formulas.calculateMagicPower(attacker.getMagicMax(),
+                                    attackIncreasePercent);
+                            attackBack = _1p * attackIncreasePercent;
+                        }
 
-                    this.cast();
+                        target.attackEffectsTemp += attackBack;
 
-                    world.scrolls.add(this);
+                        this.cast();
+
+                        world.scrolls.add(this);
+                    }
+
+                } else if (startTime + durability < currentTime) {
+
+                    target.blessed = false;
+                    target.attackEffectsTemp -= attackBack;
+
+                    world.scrolls.remove(this);
                 }
-
-            } else if (startTime + durability < currentTime) {
-                target.blessed = false;
-                target.attackEffectsTemp -= attackBack;
-
-                world.scrolls.remove(this);
             }
 
         } catch (Exception ex) {
